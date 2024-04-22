@@ -1,10 +1,8 @@
 package com.derp.result;
 
 
-@FunctionalInterface
- interface Mapper<T, R> {
-    R map(T value);
-}
+import java.util.function.Function;
+
 public interface Functor<T> {
-    <R> Functor<R> map(Mapper<T, R> mapper);
+    <R> Functor<R> map(Function<T, R> mapper);
 }

@@ -20,9 +20,8 @@ public class ResultTest {
         Result<Integer, String> result = Result.err("foo");
         var value = result
                 .map(s -> s)
-                .get()
-                .orElse(42);
-        Assertions.assertEquals(42, value);
+                .get();
+        Assertions.assertTrue(value.isEmpty());
 
         Result<Integer, String> result2 = Result.err("foo");
         var value2 = result

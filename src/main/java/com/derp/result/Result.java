@@ -1,11 +1,7 @@
 package com.derp.result;
 
 import java.util.Optional;
-
-@FunctionalInterface
-interface OrElse<Ok, Err> {
-    Ok orElse(Err err);
-}
+import java.util.function.Function;
 
 @FunctionalInterface
 interface FlatMap<OldOk, NewOk, Err> {
@@ -31,17 +27,17 @@ public class Result<Ok, Err> implements Functor<Ok> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <R> Result<R, Err> map(final Mapper<Ok, R> mapper) {
+    public <R> Result<R, Err> map(final Function<Ok, R> mapper) {
         if (this.okVal != null) {
-            return Result.ok(mapper.map(okVal));
+            return Result.ok(mapper.apply(okVal));
         }
         return (Result<R, Err>) this;
     }
 
     @SuppressWarnings("unchecked")
-    public <R> Result<Ok, R> mapErr(final Mapper<Err, R> mapper) {
+    public <R> Result<Ok, R> mapErr(final Function<Err, R> mapper) {
         if (this.errVal != null) {
-            return Result.err(mapper.map(errVal));
+            return Result.err(mapper.apply(errVal));
         }
         return (Result<Ok, R>) this;
     }
@@ -67,9 +63,9 @@ public class Result<Ok, Err> implements Functor<Ok> {
         return okVal;
     }
 
-    public Ok getOrElse(final OrElse<Ok, Err> fallback) {
+    public Ok getOrElse(final Function<Err, Ok> fallback) {
         if (errVal != null) {
-            return fallback.orElse(errVal);
+            return fallback.apply(errVal);
         }
         return okVal;
     }
