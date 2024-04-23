@@ -2,6 +2,7 @@ package com.derp.result;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @FunctionalInterface
 interface FlatMap<OldOk, NewOk, Err> {
@@ -22,6 +23,14 @@ public class Result<Ok, Err> implements Functor<Ok> {
         var r = new Result<Ok, Err>();
         r.errVal = err;
         return r;
+    }
+
+    public static <Ok> Result<Ok, Throwable> fromThrowable(final Supplier<Ok> supplier) {
+        try {
+            return Result.ok(supplier.get());
+        } catch(Throwable e) {
+            return Result.err(e);
+        }
     }
 
 

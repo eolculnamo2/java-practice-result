@@ -33,11 +33,11 @@ public class ResultTest {
 
     @Test
     public void testGetOr() {
-       Result<Integer, String> result = Result.ok(10);
-       Assertions.assertEquals(10, result.getOr(42));
+        Result<Integer, String> result = Result.ok(10);
+        Assertions.assertEquals(10, result.getOr(42));
 
-       Result<Integer, String> result2 = Result.err("10");
-       Assertions.assertEquals(42, result2.getOr(42));
+        Result<Integer, String> result2 = Result.err("10");
+        Assertions.assertEquals(42, result2.getOr(42));
     }
 
     @Test
@@ -62,5 +62,18 @@ public class ResultTest {
                 .flatMap(x -> Result.ok(x + 10))
                 .get()
                 .isEmpty());
+    }
+
+    @Test
+    public void testFromThrowable() {
+        Result<Integer, String> result = Result.fromThrowable(() -> {
+            //noinspection ConstantConditions
+            if (true) {
+                throw new RuntimeException("foo");
+            }
+            return 9;
+        }).mapErr(e -> "Foo");
+        Assertions.assertEquals(result.getErr().orElseThrow(), "Foo");
+        ;
     }
 }
